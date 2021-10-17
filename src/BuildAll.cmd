@@ -2,11 +2,9 @@ SETLOCAL
 SET BATCH_FILE_NAME=%0
 SET BATCH_DIR_NAME=%~dp0
 
-for /f "usebackq tokens=*" %%i in (`"%BATCH_DIR_NAME%\BuildFiles\Utility\vswhere.exe" -version [16.0^,17.0^) -sort -requires Microsoft.Component.MSBuild -find Common7\Tools\VsDevCmd.bat`) do (
-    if exist "%%i" (
-        call "%%i"
-    )
-)
+cd "C:\Program Files (x86)\Microsoft Visual Studio\Installer"
+for /f "usebackq tokens=*" %%A IN (`vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) DO @set vcdir=%%A
+"%vcdir%\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
 
 echo on
 
