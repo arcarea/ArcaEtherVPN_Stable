@@ -33,7 +33,7 @@ jobs:
         with:
           tag_name: Release
           release_name: Release ${{ github.run_number }}
-          body: ${{steps.build_changelog.outputs.changelog}}
+          #body: ${{steps.build_changelog.outputs.changelog}}
           draft: false
           prerelease: false
 
