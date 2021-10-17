@@ -17,13 +17,7 @@ jobs:
 
       - name: Build and Test - Win32
         run: |
-          cd "C:\Program Files (x86)\Microsoft Visual Studio\Installer"
-          vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath > vcpath.txt
-          set /p vcdir=<vcpath.txt
-          del vcpath.txt
-          
-          "%vcdir%\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
-          src\BuildALL.cmd
+         src\BuildALL.cmd
 
 #      - name: "Build Changelog"
 #        id: build_changelog
