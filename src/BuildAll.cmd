@@ -1,24 +1,32 @@
 SETLOCAL
 SET BATCH_FILE_NAME=%0
-SET BATCH_DIR_NAME=%0\..
-SET NOW_TMP=%time:~0,2%
-SET NOW=%date:~0,4%%date:~5,2%%date:~8,2%_%NOW_TMP: =0%%time:~3,2%%time:~6,2%
+SET BATCH_DIR_NAME=%~dp0
 
-rem call "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"
+for /f "usebackq tokens=*" %%i in (`"%BATCH_DIR_NAME%\BuildFiles\Utility\vswhere.exe" -version [16.0^,17.0^) -sort -requires Microsoft.Component.MSBuild -find Common7\Tools\VsDevCmd.bat`) do (
+    if exist "%%i" (
+        call "%%i"
+    )
+)
 
-rem call "C:\Program Files\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"
-
-cd "C:\Program Files (x86)\Microsoft Visual Studio\Installer"
-for /f "usebackq tokens=*" %%A IN (`vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) DO @set vcdir=%%A
-call "%vcdir%\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
+echo on
 
 
-del %BATCH_DIR_NAME%\bin\BuildUtil.exe
+cd /d "%BATCH_DIR_NAME%
 
-C:\windows\Microsoft.NET\Framework\v3.5\MSBuild.exe /toolsversion:3.5 /verbosity:detailed /target:Clean /property:Configuration=Debug "%BATCH_DIR_NAME%\BuildUtil\BuildUtil.csproj"
+msbuild /target:Clean /property:Configuration=Release /property:Platform=x86 SEVPN.sln
+IF ERRORLEVEL 1 GOTO LABEL_ERROR
 
-C:\windows\Microsoft.NET\Framework\v3.5\MSBuild.exe /toolsversion:3.5 /verbosity:detailed /target:Rebuild /property:Configuration=Debug "%BATCH_DIR_NAME%\BuildUtil\BuildUtil.csproj"
+msbuild /target:Rebuild /maxcpucount:8 /property:Configuration=Release /property:Platform=x86 SEVPN.sln
+IF ERRORLEVEL 1 GOTO LABEL_ERROR
 
-cmd /k "%BATCH_DIR_NAME%\bin\BuildUtil.exe /CMD:All"
+msbuild /target:Clean /property:Configuration=Release /property:Platform=x64 SEVPN.sln
+IF ERRORLEVEL 1 GOTO LABEL_ERROR
 
+msbuild /target:Rebuild /maxcpucount:8 /property:Configuration=Release /property:Platform=x64 SEVPN.sln
+IF ERRORLEVEL 1 GOTO LABEL_ERROR
 
+"%BATCH_DIR_NAME%\bin\BuildUtil.exe" /CMD:All
+IF ERRORLEVEL 1 GOTO LABEL_ERROR
+
+:LABEL_ERROR
+EXIT %ERRORLEVEL%
