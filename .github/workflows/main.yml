@@ -1,0 +1,30 @@
+name: Build and Test - Windows
+
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  build:
+    runs-on: ${{ matrix.operating-system }}
+    timeout-minutes: 15
+
+    strategy:
+      matrix:
+        operating-system: [windows-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build and Test - Win32
+        run: |
+          src\BuildALL.cmd
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: installer-package
+          path: output\pkg\**\*.exe
+          retention-days: 5
