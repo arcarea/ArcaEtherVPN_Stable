@@ -4,7 +4,7 @@ SET BATCH_DIR_NAME=%~dp0
 
 cd "C:\Program Files (x86)\Microsoft Visual Studio\Installer"
 for /f "usebackq tokens=*" %%A IN (`vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) DO @set vcdir=%%A
-"%vcdir%\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
+call "%vcdir%\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
 
 echo on
 
