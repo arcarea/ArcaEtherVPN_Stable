@@ -19,11 +19,11 @@ jobs:
         run: |
           src\BuildALL.cmd
 
-      - name: "Build Changelog"
-        id: build_changelog
-        uses: mikepenz/release-changelog-builder-action@v2.4.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: "Build Changelog"
+#        id: build_changelog
+#        uses: mikepenz/release-changelog-builder-action@v2.4.2
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create release
         id: create_release
@@ -43,5 +43,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_id: ${{ steps.create_release.outputs.id }}
+          #release_id: ${{ steps.create_release.outputs.id }}
           assets_path: output\pkg\**\*.exe
