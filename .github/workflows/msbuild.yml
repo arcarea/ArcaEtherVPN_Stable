@@ -17,6 +17,9 @@ jobs:
 
       - name: Build and Test - Win32
         run: |
+          cd C:\Program Files (x86)\Microsoft Visual Studio\Installer
+          for /f "usebackq tokens=*" %i IN (`vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) DO @set vcdir=%i
+          "%vcdir%\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
           src\BuildALL.cmd
 
 #      - name: "Build Changelog"
